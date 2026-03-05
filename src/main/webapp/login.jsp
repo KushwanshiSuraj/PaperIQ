@@ -85,7 +85,7 @@
         </form>
         
         <p style="text-align: center; margin-top: 20px;">
-            <small>Admin: admin/admin123 | Teacher: teacher/teacher123</small>
+            <small>Admin | Teacher </small>
         </p>
     </div>
     <!-- Footer -->
