@@ -20,3 +20,8 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+*.backup
+
+# Database
+*.sql
+paperiq_database.sql

@@ -1,68 +1,111 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
-    // Check if user is logged in and is admin
-    if(session.getAttribute("user_id") == null || !session.getAttribute("role").equals("admin")) {
-        response.sendRedirect("../login.jsp");
+    if(session.getAttribute("user_id") == null || !"admin".equals(session.getAttribute("role"))) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
-    String basePath = request.getContextPath() + "/";
+    
+    Integer totalQuestions = (Integer) request.getAttribute("totalQuestions");
+    int[] levelCounts = (int[]) request.getAttribute("levelCounts");
+    
+    String fullName = (String) session.getAttribute("full_name");
+    if(fullName == null) fullName = "Admin";
+    
+    // Default values if attributes are missing
+    if(totalQuestions == null) totalQuestions = 0;
+    if(levelCounts == null) levelCounts = new int[7];
 %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PaperIQ - Admin Dashboard</title>
-    <style>
-        body { font-family: Arial; margin: 20px; background: #f0f2f5; }
-        .container { max-width: 1200px; margin: auto; }
-        .header { background: #4CAF50; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        .nav { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-        .nav a { margin-right: 20px; text-decoration: none; color: #4CAF50; font-weight: bold; }
-        .nav a:hover { text-decoration: underline; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .welcome { font-size: 18px; margin-bottom: 20px; }
-        .logout { float: right; background: #f44336; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<%= request.getContextPath() %>/css/paperiq.css">
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>📄 PaperIQ - Admin Dashboard</h1>
-            <a href="<%= basePath %>logout.jsp" class="logout">Logout</a>
+        <div class="nav-bar">
+            <div style="font-weight: 700; font-size: 1.5rem;">📄 PaperIQ</div>
+            <div class="nav-links">
+                <a href="<%= request.getContextPath() %>/dashboard" class="active">🏠 Dashboard</a>
+                <a href="<%= request.getContextPath() %>/admin/questions.jsp">📋 Question Bank</a>
+                <a href="<%= request.getContextPath() %>/paper-history">📊 Paper History</a>
+                <a href="<%= request.getContextPath() %>/paper-generator.jsp">📄 Generate Paper</a>
+                <a href="<%= request.getContextPath() %>/logout-confirm.jsp" class="logout-btn">🚪 Logout</a>
+            </div>
         </div>
         
-        <div class="nav">
-            <a href="dashboard.jsp">🏠 Dashboard</a>
-            <a href="<%= basePath %>questions.jsp">📋 Question Bank</a>
-            <!--   ><a href="users.jsp">👥 Manage Users</a> -->
-            <a href="<%= basePath %>paper-generator.jsp">📄 Generate Paper</a>
+        <div class="glass-card fade-in">
+            <h1>Admin Dashboard</h1>
+            <p style="font-size: 1.2rem;">Welcome back, <strong><%= fullName %></strong>!</p>
         </div>
         
-        <div class="card">
-            <div class="welcome">
-                Welcome, <strong><%= session.getAttribute("full_name") %></strong> (Administrator)
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📋</div>
+                <div class="stat-number"><%= totalQuestions %></div>
+                <div class="stat-label">Total Questions</div>
             </div>
             
-            <h3>Admin Controls:</h3>
-            <ul>
-                <li>✅ Full access to Question Bank (Add/Edit/Delete)</li>
-                <li>✅ Generate question papers</li>
-                <li>✅ Manage Users</li>
-            </ul>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-number">6</div>
+                <div class="stat-label">Bloom Levels</div>
+            </div>
             
-            <p>
-                <a href="<%= basePath %>questions.jsp" style="background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">Go to Question Bank</a>
-                <a href="<%= basePath %>paper-generator.jsp" style="background: #FF9800; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin-left: 10px;">Generate Paper</a>
-            </p>
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">2</div>
+                <div class="stat-label">User Roles</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📄</div>
+                <div class="stat-number">∞</div>
+                <div class="stat-label">Papers Generated</div>
+            </div>
+        </div>
+        
+        <div class="glass-card" style="margin-top: 30px;">
+            <h2>Questions per Bloom Level</h2>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 15px; margin: 30px 0;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #4361ee;"><%= levelCounts[1] %></div>
+                    <div>Remember</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #4cc9f0;"><%= levelCounts[2] %></div>
+                    <div>Understand</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #06d6a0;"><%= levelCounts[3] %></div>
+                    <div>Apply</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #ffd166;"><%= levelCounts[4] %></div>
+                    <div>Analyze</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #ef476f;"><%= levelCounts[5] %></div>
+                    <div>Evaluate</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem; font-weight: bold; color: #9c89b8;"><%= levelCounts[6] %></div>
+                    <div>Create</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="display: flex; gap: 20px; justify-content: center; margin: 40px 0;">
+            <a href="<%= request.getContextPath() %>/admin/questions.jsp" class="btn btn-primary btn-lg">📋 Manage Questions</a>
+            <a href="<%= request.getContextPath() %>/paper-generator.jsp" class="btn btn-success btn-lg">📄 Generate Paper</a>
+        </div>
+        
+        <div class="footer">
+            <small>PaperIQ © 2026 - Developed by Suraj Kumar (Enrollment No: 2351352563, BCA, IGNOU) </small>
         </div>
     </div>
-    <!-- Footer -->
-<div style="text-align: center; margin-top: 50px; padding: 20px; color: #666; font-size: 12px; border-top: 1px solid #ddd;">
-    <small>
-        PaperIQ © 2026 - Automated Question Paper System<br>
-        Developed by: <strong>Suraj Kumar</strong> <br>
-        BCA, IGNOU |
-    </small>
-</div>
 </body>
 </html>

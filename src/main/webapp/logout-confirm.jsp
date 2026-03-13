@@ -11,17 +11,17 @@
 <body>
     <div class="login-container">
         <div class="login-card" style="text-align: center;">
-            <h2>📄 PaperIQ</h2>
-            <p>Are you sure you want to logout?</p>
+            <h2 style="color: var(--primary);">📄 PaperIQ</h2>
+            <p style="font-size: 1.2rem; margin: 30px 0;">Are you sure you want to logout?</p>
             
-            <div style="display: flex; gap: 10px; justify-content: center; margin-top: 30px;">
-                <a href="<%= request.getContextPath() %>/logout" class="btn btn-danger">Yes, Logout</a>
-                <a href="javascript:history.back()" class="btn btn-primary">No, Stay</a>
+            <div style="display: flex; gap: 20px; justify-content: center;">
+                <a href="<%= request.getContextPath() %>/logout" class="btn btn-danger btn-lg">✅ Yes, Logout</a>
+                <a href="javascript:history.back()" class="btn btn-primary btn-lg">❌ No, Stay</a>
             </div>
         </div>
         
         <div class="footer">
-            <small>PaperIQ © 2026 - Developed by Suraj Kumar (BCA, IGNOU)</small>
+            <small>PaperIQ © 2026 - Developed by Suraj Kumar </small>
         </div>
     </div>
 </body>
